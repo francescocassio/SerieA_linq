@@ -6,7 +6,7 @@ using SerieAConsoleApp;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
 
-namespace SerieAConsoleAppRaw 
+namespace SerieAConsoleAppRaw
 {
     public class Squadra
     {
@@ -105,9 +105,9 @@ namespace SerieAConsoleAppRaw
                         // Query: seleziona i giocatori con età superiore a 30 anni
                         var senior = giocatori
                             .Where(g => g.Età > 30);
-                            //from g in giocatori
-                            //where g.Età > 30
-                            //select g;
+                        //from g in giocatori
+                        //where g.Età > 30
+                        //select g;
 
                         // Stampa nome ed età dei giocatori trovati
                         foreach (var g in senior)
@@ -118,9 +118,9 @@ namespace SerieAConsoleAppRaw
                         // Query: ordina i giocatori per età in ordine decrescente
                         var ordinati = giocatori
                             .OrderByDescending(g => g.Età);
-                            //from g in giocatori
-                            //orderby g.Età descending
-                            //select g;
+                        //from g in giocatori
+                        //orderby g.Età descending
+                        //select g;
 
                         // Stampa i giocatori ordinati
                         foreach (var g in ordinati)
@@ -131,11 +131,11 @@ namespace SerieAConsoleAppRaw
                         // Query: raggruppa i giocatori per ruolo e conta quanti ce ne sono
                         var perRuolo = giocatori
                             .GroupBy(g => g.Ruolo);
-                            //.Select(g => new
-                            //{
-                            //    Ruolo = g.Key,
-                            //    Totale = g.Count()
-                            //});
+                        //.Select(g => new
+                        //{
+                        //    Ruolo = g.Key,
+                        //    Totale = g.Count()
+                        //});
                         //from g in giocatori
                         //group g by g.Ruolo into gruppo
                         //select new
@@ -158,48 +158,100 @@ namespace SerieAConsoleAppRaw
 
                     case "7":
                         // Query: seleziona le squadre con più di 5 giocatori
-                        var conMolti = giocatori
-                            .GroupBy(g => g.SquadraId)
-                            .Where(g => g.Count() > 5);
-                            
+                        //var conMolti = giocatori
+                        //    .GroupBy(g => g.SquadraId)
+                        //    .Where(g => g.Count() > 5);
+
+                        //IList<string> squadreConMolti = new List<string>();
+                        //foreach (var s in conMolti)
+                        //{
+                        //    var squadra = squadre
+                        //        .Where(q => q.Id == s.Key)
+                        //        .Select(q => q.Nome);
+                        //    squadreConMolti.Add(squadra.First());
+                        //}
+                        var conMolti = squadre
+                        .Select(s => new { s.Nome, Totale = giocatori.Count(g => g.SquadraId == s.Id) })
+                        .Where(s => s.Totale > 5);
+                        //var conMolti = giocatori
+                        //    .GroupBy(g => g.SquadraId)
+                        //    .Where(g => g.Count() > 5)
+                        //    .Join(squadre,
+                        //         g => g.Key,
+                        //         s => s.Id,
+                        //         (g, s) => new
+                        //         {
+                        //             Nome = s.Nome,
+                        //             TotaleGiocatori = g.Count()
+                        //         });
                         //var squadre = squadre
                         //    .Where(s => s.Id = g.Key);
-                            //from g in giocatori
-                            //from s in squadre
-                            //where
-                            //    (from g in giocatori
-                            //     where g.SquadraId == s.Id
-                            //     select g).Count() > 5
-                            //select s;
+                        //from g in giocatori
+                        //from s in squadre
+                        //where
+                        //    (from g in giocatori
+                        //     where g.SquadraId == s.Id
+                        //     select g).Count() > 5
+                        //select s;
 
                         // Stampa i nomi delle squadre trovate
                         foreach (var s in conMolti)
-                            Console.WriteLine(s.Nome);
+                            Console.WriteLine(s.Nome + " - " + s.Totale);
                         break;
+                    //foreach (var s in squadreConMolti)
+                    //    Console.WriteLine(s);
+                    //break;
 
                     case "8":
                         // Definiamo una query LINQ che calcola l'età media dei giocatori per ogni squadra
-                        var media =
-                            from s in squadre                     // Ciclo su ogni squadra nella lista `squadre`
+                        //var media =
+                        //    from s in squadre                     // Ciclo su ogni squadra nella lista `squadre`
 
-                                // LET: creo una sottoquery che recupera i giocatori appartenenti alla squadra corrente
-                            let giocatoriSquadra = (
-                                from g in giocatori              // Ciclo su ogni giocatore
-                                where g.SquadraId == s.Id        // Condizione: solo i giocatori della squadra corrente
-                                select g                         // Seleziona il giocatore
-                            )
+                        //        // LET: creo una sottoquery che recupera i giocatori appartenenti alla squadra corrente
+                        //    let giocatoriSquadra = (
+                        //        from g in giocatori              // Ciclo su ogni giocatore
+                        //        where g.SquadraId == s.Id        // Condizione: solo i giocatori della squadra corrente
+                        //        select g                         // Seleziona il giocatore
+                        //    )
 
-                            // Proiezione: restituisce un oggetto anonimo con il nome della squadra e l'età media
-                            select new
+                        //    // Proiezione: restituisce un oggetto anonimo con il nome della squadra e l'età media
+                        //    select new
+                        //    {
+                        //        s.Nome,                          // Nome della squadra
+
+                        //        // Calcolo della media solo se ci sono giocatori, altrimenti mettiamo 0
+                        //        Media = giocatoriSquadra.Average(g => g.Età) // allora calcola la media dell'età                         // altrimenti restituisci 0 come età media
+                        //    };
+
+                        var media = squadre
+                            .Select(s => new
                             {
-                                s.Nome,                          // Nome della squadra
+                                s.Nome,
+                                Media = giocatori
+                            .Where(g => g.SquadraId == s.Id)
+                            .Average(g => g.Età)
+                            });
 
-                                // Calcolo della media solo se ci sono giocatori, altrimenti mettiamo 0
-                                Media = giocatoriSquadra.Any()  // Se la lista ha almeno un giocatore
-                                    ? giocatoriSquadra.Average(g => g.Età) // allora calcola la media dell'età
-                                    : 0                          // altrimenti restituisci 0 come età media
-                            };
+                        //var media = giocatori
+                        //    .GroupBy(s => squadre.Where(g => g.Id == s.SquadraId).First().Nome)
+                        //    .Select(s => new {Nome = s.Key, Media = s.Average(s => s.Età)});
 
+                        //var media = giocatori
+                        //    .GroupBy(g => g.SquadraId)
+                        //    .Join(squadre,
+                        //         g => g.Key,
+                        //         s => s.Id,
+                        //         (g, s) => new
+                        //         {
+                        //             Nome = s.Nome,
+                        //             etamedia = g.Average(g => g.Età)
+                        //         });
+
+
+                        //var media = giocatori
+                        //    .GroupBy(g => g.SquadraId)
+                        //    .Select(g => new { g.Key, n = g.Average(g => g.Età) })
+                        //    .Join(squadre, g => g.Key, s => s.Id, (g, s) => new { Nome = s.Nome, eta = g.n });
 
                         // Stampa il nome della squadra e la media età
                         foreach (var s in media)
@@ -236,6 +288,7 @@ namespace SerieAConsoleAppRaw
                             select s;                               // Se il risultato è false (cioè non ha giocatori), includiamo la squadra nei risultati
 
 
+
                         // Stampa le squadre senza giocatori
                         foreach (var s in senza)
                             Console.WriteLine($"{s.Nome} - Nessun giocatore");
@@ -243,16 +296,28 @@ namespace SerieAConsoleAppRaw
 
                     case "11":
                         // JOIN tra giocatori e squadre: accoppia ogni giocatore alla sua squadra
-                        var joinBase =
-                            from g in giocatori                  // ciclo sui giocatori
-                            join s in squadre                   // fai join con le squadre
-                            on g.SquadraId equals s.Id          // condizione di join: ID squadra
-                            select new                          // proietta il risultato
-                            {
-                                g.Nome,                         // nome del giocatore
-                                g.Ruolo,                        // ruolo del giocatore
-                                Squadra = s.Nome                // nome della squadra
-                            };
+                        //var joinBase =
+                        //    from g in giocatori                  // ciclo sui giocatori
+                        //    join s in squadre                   // fai join con le squadre
+                        //    on g.SquadraId equals s.Id          // condizione di join: ID squadra
+                        //    select new                          // proietta il risultato
+                        //    {
+                        //        g.Nome,                         // nome del giocatore
+                        //        g.Ruolo,                        // ruolo del giocatore
+                        //        Squadra = s.Nome                // nome della squadra
+                        //    };
+                        var joinBase = giocatori        //Case 11 + 12
+                            .Join(squadre,
+                                 g => g.SquadraId,
+                                 s => s.Id,
+                                 (g, s) => new
+                                 {
+                                     Città = s.Città,
+                                     Squadra = s.Nome,
+                                     Nome = g.Nome,
+                                     Ruolo = g.Ruolo,
+                                 })
+                            .Where(s => s.Città == "Milano");
 
                         // stampa i risultati
                         foreach (var x in joinBase)
@@ -327,7 +392,37 @@ namespace SerieAConsoleAppRaw
                             Console.WriteLine($"{x.Squadra}: Età media {x.Media:F1}");
                         break;
 
-                    
+                    case "16":
+                        //Partite vinte dalla squadra di casa
+                        var vinte = partite
+                                .Where(p => p.GolCasa > p.GolTrasferta);
+                        //.Join(squadre,
+                        //     p => p.SquadraCasaId,
+                        //     s => s.Id,
+                        //     (p, s) => new
+                        //     {
+                        //         Nome = s.Nome,
+                        //         GolCasa = p.GolCasa,
+                        //         GolTrasferta = p.GolTrasferta
+                        //     });
+                        foreach (var x in vinte)
+                            Console.WriteLine("Partita:" + (x.Id));
+                        break;
+
+                        case "17":
+                            var somma = partite
+                            .GroupBy(p => p.SquadraCasaId)
+                            .Join(squadre,
+                            p => p.Key,
+                             s => s.Id,
+                             (p, s) => new
+                             {
+                                 Nome = s.Nome,
+                                 GolCasa = p.Sum(p => p.GolCasa),
+                             });
+                        foreach (var x in somma)
+                            Console.WriteLine($"{x.Nome}: Gol fatti {x.GolCasa}");
+                        break;
 
                     case "0":
                         continua = 0;
