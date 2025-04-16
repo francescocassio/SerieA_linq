@@ -26,7 +26,7 @@ namespace SerieAConsoleAppRaw
 
     class Program
     {
-        static string connString = "Server=FRANCESCO\\SQLEXPRESS;Database=SerieA;Trusted_Connection=True;TrustServerCertificate=True;";
+        static string connString = "Server=LAPTOP-V3K3MMCB\\SQLEXPRESS;Database=SerieA;Trusted_Connection=True;TrustServerCertificate=True;";
 
 
 
@@ -65,9 +65,10 @@ namespace SerieAConsoleAppRaw
                 {
                     case "1":
                         // Query: seleziona tutte le squadre
-                        var tutte =
-                            from s in squadre
-                            select s;
+                        //var tutte =
+                        //    from s in squadre
+                        //    select s;
+                        var tutte = squadre.Select(s => s);
 
                         // Stampa nome e città di ciascuna squadra
                         foreach (var s in tutte)
@@ -76,10 +77,10 @@ namespace SerieAConsoleAppRaw
 
                     case "2":
                         // Query: ordina le squadre per nome in ordine alfabetico
-                        var ord =
-                            from s in squadre
-                            orderby s.Nome
-                            select s;
+                        var ord = squadre.OrderBy(s => s.Nome);
+                        //from s in squadre
+                        //orderby s.Nome
+                        //select s;
 
                         // Stampa i nomi delle squadre ordinate
                         foreach (var s in ord)
@@ -88,10 +89,12 @@ namespace SerieAConsoleAppRaw
 
                     case "3":
                         // Query: seleziona squadre che iniziano con la lettera "M"
-                        var filtro =
-                            from s in squadre
-                            where s.Nome.StartsWith("M")
-                            select s;
+                        var filtro = squadre
+                            .OrderBy(s => s.Nome)
+                            .Where(s => s.Nome.StartsWith("M"));
+                        //from s in squadre
+                        //where s.Nome.StartsWith("M")
+                        //select s;
 
                         // Stampa le squadre filtrate
                         foreach (var s in filtro)
@@ -100,10 +103,11 @@ namespace SerieAConsoleAppRaw
 
                     case "4":
                         // Query: seleziona i giocatori con età superiore a 30 anni
-                        var senior =
-                            from g in giocatori
-                            where g.Età > 30
-                            select g;
+                        var senior = giocatori
+                            .Where(g => g.Età > 30);
+                            //from g in giocatori
+                            //where g.Età > 30
+                            //select g;
 
                         // Stampa nome ed età dei giocatori trovati
                         foreach (var g in senior)
@@ -112,10 +116,11 @@ namespace SerieAConsoleAppRaw
 
                     case "5":
                         // Query: ordina i giocatori per età in ordine decrescente
-                        var ordinati =
-                            from g in giocatori
-                            orderby g.Età descending
-                            select g;
+                        var ordinati = giocatori
+                            .OrderByDescending(g => g.Età);
+                            //from g in giocatori
+                            //orderby g.Età descending
+                            //select g;
 
                         // Stampa i giocatori ordinati
                         foreach (var g in ordinati)
@@ -124,29 +129,48 @@ namespace SerieAConsoleAppRaw
 
                     case "6":
                         // Query: raggruppa i giocatori per ruolo e conta quanti ce ne sono
-                        var perRuolo =
-                            from g in giocatori
-                            group g by g.Ruolo into gruppo
-                            select new
-                            {
-                                Ruolo = gruppo.Key,          // Chiave del gruppo = nome del ruolo
-                                Totale = gruppo.Count()      // Numero di elementi nel gruppo
-                            };
+                        var perRuolo = giocatori
+                            .GroupBy(g => g.Ruolo);
+                            //.Select(g => new
+                            //{
+                            //    Ruolo = g.Key,
+                            //    Totale = g.Count()
+                            //});
+                        //from g in giocatori
+                        //group g by g.Ruolo into gruppo
+                        //select new
+                        //{
+                        //    Ruolo = gruppo.Key,          // Chiave del gruppo = nome del ruolo
+                        //    Totale = gruppo.Count()      // Numero di elementi nel gruppo
+                        //};
 
                         // Stampa il numero di giocatori per ogni ruolo
                         foreach (var r in perRuolo)
-                            Console.WriteLine($"{r.Ruolo}: {r.Totale} giocatori");
+                        {
+                            Console.WriteLine($"{r.Key}: {r.Count()} giocatori");
+                            foreach (var g in r)
+                            {
+                                Console.WriteLine($"{g.Nome}");
+                            }
+                            Console.WriteLine("--------------------");
+                        }
                         break;
 
                     case "7":
                         // Query: seleziona le squadre con più di 5 giocatori
-                        var conMolti =
-                            from s in squadre
-                            where
-                                (from g in giocatori
-                                 where g.SquadraId == s.Id
-                                 select g).Count() > 5
-                            select s;
+                        var conMolti = giocatori
+                            .GroupBy(g => g.SquadraId)
+                            .Where(g => g.Count() > 5);
+                            
+                        //var squadre = squadre
+                        //    .Where(s => s.Id = g.Key);
+                            //from g in giocatori
+                            //from s in squadre
+                            //where
+                            //    (from g in giocatori
+                            //     where g.SquadraId == s.Id
+                            //     select g).Count() > 5
+                            //select s;
 
                         // Stampa i nomi delle squadre trovate
                         foreach (var s in conMolti)
