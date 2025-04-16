@@ -51,7 +51,19 @@ INSERT INTO Squadre (Nome, Città) VALUES
 ('Salernitana', 'Salerno'),
 ('Verona', 'Verona'),
 ('Cagliari', 'Cagliari'),
-('Frosinone', 'Frosinone'),
+('Frosinone', 'Frosinone');
+
+-- Inserimento Giocatori (solo esempio per prime 5 squadre)
+INSERT INTO Giocatori (Nome, Età, Ruolo, SquadraId) VALUES
+('Lautaro Martinez', 26, 'Attaccante', 1),
+('Hakan Calhanoglu', 29, 'Centrocampista', 1),
+('Mike Maignan', 28, 'Portiere', 2),
+('Rafael Leao', 24, 'Attaccante', 2),
+('Dusan Vlahovic', 23, 'Attaccante', 3),
+('Federico Chiesa', 26, 'Ala', 3),
+('Victor Osimhen', 25, 'Attaccante', 4),
+('Khvicha Kvaratskhelia', 23, 'Ala', 4),
+('Paulo Dybala', 30, 'Attaccante', 5),
 ('Nicola Rossi', 32, 'Ala', 12),
 ('Matteo Costa', 33, 'Difensore', 14),
 ('Daniele Russo', 23, 'Attaccante', 5),
@@ -151,19 +163,7 @@ INSERT INTO Squadre (Nome, Città) VALUES
 ('Michele Russo', 23, 'Centrocampista', 19),
 ('Michele Romano', 29, 'Ala', 15),
 ('Federico Gallo', 29, 'Portiere', 4),
-('Michele Costa', 31, 'Difensore', 3);
-
--- Inserimento Giocatori (solo esempio per prime 5 squadre)
-INSERT INTO Giocatori (Nome, Età, Ruolo, SquadraId) VALUES
-('Lautaro Martinez', 26, 'Attaccante', 1),
-('Hakan Calhanoglu', 29, 'Centrocampista', 1),
-('Mike Maignan', 28, 'Portiere', 2),
-('Rafael Leao', 24, 'Attaccante', 2),
-('Dusan Vlahovic', 23, 'Attaccante', 3),
-('Federico Chiesa', 26, 'Ala', 3),
-('Victor Osimhen', 25, 'Attaccante', 4),
-('Khvicha Kvaratskhelia', 23, 'Ala', 4),
-('Paulo Dybala', 30, 'Attaccante', 5),
+('Michele Costa', 31, 'Difensore', 3),
 ('Lorenzo Pellegrini', 27, 'Centrocampista', 5);
 
 -- Inserimento di 50 partite nella tabella Partite
